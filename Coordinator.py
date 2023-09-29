@@ -7,8 +7,10 @@ import io
 from database import database_manager as db_manager
 from forms_templates import prompt_generator
 
-os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
-
+if os.path.exists('certificate\certificate.crt'):
+    os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
+else:
+    print("Certificate file does not exist or is inaccessible.")
 
 load_dotenv()
 
@@ -40,7 +42,6 @@ if st.button("Search") and question != "":
 
 
 if formatted_response != "":
-    print(formatted_response)
     st.markdown(formatted_response)
 else:
     st.markdown(f"Provide context as what you are searching for and we might be able to find the right process bot for you.")

@@ -7,12 +7,12 @@ import io
 from database import database_manager as db_manager
 import chardet
 
-os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
+#os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
 
 
 load_dotenv()
 
-bot_id = 2
+bot_id = 1
 
 bot = db_manager.get_bot_by_id(bot_id)
 

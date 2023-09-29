@@ -8,9 +8,11 @@ import io
 from database import database_manager as db_manager
 import chardet
 
-os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
-
-
+if os.path.exists('certificate\certificate.crt'):
+    os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
+else:
+    print("Certificate file does not exist or is inaccessible.")
+    
 load_dotenv()
 
 bot_id = {bot_id}
