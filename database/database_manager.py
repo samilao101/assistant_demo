@@ -29,6 +29,15 @@ def get_all_bots():
     connection.close()
     return bots_data
 
+def get_all_bots_query():
+    connection = sqlite3.connect(database_location)
+    cursor = connection.cursor()
+    cursor.execute('''SELECT * FROM bots''')
+    bots_data = cursor.fetchall()
+    bots_data = [{'id': row[0], 'name': row[1], 'purpose': row[2], 'file_name': row[3]} for row in bots_data]
+    connection.close()
+    return bots_data
+
 def delete_all_bots_from_db():
     connection = sqlite3.connect(database_location)
     cursor = connection.cursor()

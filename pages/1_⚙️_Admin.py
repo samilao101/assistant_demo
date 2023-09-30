@@ -94,7 +94,7 @@ if authentication_status == True:
         if st.button("Generate Purpose from File"):
             if data is not None:
                 string_data = StringIO(data.getvalue().decode("utf-8"))
-                gsar_prompt = f"summarize the following text into 4 sentences describing it in the way you would see it as introductory paragraph:  {string_data.read()} /n/n "
+                gsar_prompt = f"summarize the following text into 2 to 3 concise sentences describing it in the way you would see it as introductory paragraph:  {string_data.read()} /n/n "
                 
                 with st.spinner("Generating response..."):
                     generated_response = openai.ChatCompletion.create(

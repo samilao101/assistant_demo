@@ -14,10 +14,11 @@ else:
     
 load_dotenv()
 
-bot_id = 4
+bot_id = 1
 
 bot = db_manager.get_bot_by_id(bot_id)
-
+print("Printing Bot:")
+print(bot)
 bot_id, bot_name, bot_purpose, bot_file_name = bot
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
