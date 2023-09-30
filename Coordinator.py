@@ -23,10 +23,16 @@ def convert_spaces_to_underscores(input_string):
     result_string = input_string.replace(" ", "_")
     return result_string
 
+def truncate_text(text, max_chars=250):
+    if len(text) > max_chars:
+        return text[:max_chars] + '...'
+    else:
+        return text
+
 def sidebar():
-    st.sidebar.header("FAQ Form:") 
+    st.sidebar.header("Find:") 
     question = st.sidebar.text_area(  # Moved to sidebar
-        "Please type below what you would like to learn more about and I will try to find the process for you to ask your questions. ", placeholder="Enter question...")
+        "What are you trying to do or learn more about?", placeholder="Enter question...")
 
     formatted_response = ""
 
@@ -56,18 +62,24 @@ def sidebar():
 
 sidebar()
 st.image("cumminslogo.png")  # Moved to sidebar
-st.header("Process FAQ Bots")
+st.header("Process Bots:")
 
-all_bots = db_manager.get_all_bots()
+all_bots = db_manager.get_all_bots_query()
 
-st.text_input("Enter process name...")
+query = st.text_input('Search process by title or key words....')
+
+filtered_bots = [bot for bot in all_bots if query.lower() in bot['name'].lower() or query.lower() in bot['purpose'].lower()]
 
 num_columns = 3
 cols = st.columns(num_columns)
 
-for i in range(0, len(all_bots), num_columns):
-    for j in range(num_columns):
-        idx = i + j
-        bot_id, bot_name, bot_purpose, bot_file_name = all_bots[idx]
-        if idx < len(all_bots):
-            cols[j].markdown(f"[{bot_name}]({base_url}{convert_spaces_to_underscores(bot_name)})")
+if not filtered_bots:
+    st.write("Not found.")
+else:
+    for i in range(0, len(filtered_bots), num_columns):
+        for j in range(num_columns):
+            idx = i + j
+            if idx < len(filtered_bots):  # Ensure idx is within the range of filtered_bots
+                bot = filtered_bots[idx]
+                cols[j].markdown(f"[{bot['name']}]({base_url}{convert_spaces_to_underscores(bot['name'])})")
+                cols[j].markdown(f"{truncate_text(bot['purpose'])}")
