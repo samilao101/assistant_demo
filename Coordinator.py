@@ -6,7 +6,7 @@ import io
 from database import database_manager as db_manager
 from forms_templates import prompt_generator
 from streamlit_javascript import st_javascript
-base_url = st_javascript("await fetch('').then(r => window.parent.location.href)")
+base_url = st_javascript("await fetch('').then(r => window.parent.location.href)", key="secret")
 
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
