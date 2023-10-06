@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import io
 from database import database_manager as db_manager
 import chardet
+import model_api
 
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
@@ -14,7 +15,7 @@ else:
     
 load_dotenv()
 
-bot_id = 3
+bot_id = 2
 
 bot = db_manager.get_bot_by_id(bot_id)
 
@@ -44,21 +45,14 @@ formatted_response = ""
 if st.button("Search") and prompt != "":
     complete_prompt = f"Use the following context below to answer question:  {prompt} /n/n (Please use markdown to make the response easier to read). Do not make up answers and only respond to questions relevant to to the context. /n/n context: {file_content}"
     with st.spinner("Generating response..."):
-        generated_response = openai.ChatCompletion.create(
-            model='gpt-4',
-            messages=[
-                {"role": "user", "content": complete_prompt}
-            ],
-            temperature=0.0
-        )
+    
+        interface = model_api.UniversalModelInterface()
 
-        formatted_response = generated_response['choices'][0]['message']['content']
+        formatted_response = interface.get_response("gpt-4", complete_prompt, f'responses/{bot_name}.xlsx', prompt)
+        
 
 
 if formatted_response != "":
     st.write(formatted_response)
 else:
     st.markdown(f"Definition: {bot_purpose}")
-
-
-st.write("**Benefits Summary**: [link](https://cummins365.sharepoint.com/sites/GRP_CC42904/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FGRP%5FCC42904%2FShared%20Documents%2FBenefits%2F2022%20Employee%20Benefit%20Summary%2Epdf&parent=%2Fsites%2FGRP%5FCC42904%2FShared%20Documents%2FBenefits)")

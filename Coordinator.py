@@ -42,6 +42,7 @@ def sidebar():
         loading_message.text("Generating response...")  # Display loading message in the sidebar.
 
         prompt_question = prompt_generator.generate_coordinator_prompt(question)
+        
         generated_response = openai.ChatCompletion.create(
             model='gpt-4',
             messages=[

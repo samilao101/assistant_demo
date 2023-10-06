@@ -1,4 +1,3 @@
-
 import streamlit as st
 import os
 import openai
@@ -11,6 +10,7 @@ from GSAR_functions import functions, document_creator
 import json
 import io
 from docx import Document
+import model_api
 
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
@@ -19,7 +19,7 @@ else:
     
 load_dotenv()
 
-bot_id = 2
+bot_id = 1
 
 bot = db_manager.get_bot_by_id(bot_id)
 
@@ -60,16 +60,13 @@ formatted_response = ""
 if st.button("Search") and prompt != "":
     complete_prompt = f"Use the following context below to answer question:  {prompt} /n/n (Please use markdown to make the response easier to read). Do not make up answers and only respond to questions relevant to to the context. /n/n context: {file_content}"
     with st.spinner("Generating response..."):
-        generated_response = openai.ChatCompletion.create(
-            model='gpt-4',
-            messages=[
-                {"role": "user", "content": complete_prompt}
-            ],
-            functions = functions.functions_call,
-            temperature=0.0
-        )
+    
+        interface = model_api.UniversalModelInterface()
 
+        generated_response = interface.get_response("gpt-4-response", complete_prompt, f'responses/{bot_name}.xlsx', prompt)
+        print(complete_prompt)
         response_message = generated_response['choices'][0]['message']
+        
         if response_message.get("function_call"):
             process_function_call(response = generated_response['choices'][0]['message'])
             doc_download = document_creator.return_document()
