@@ -7,11 +7,6 @@ import io
 from database import database_manager as db_manager
 import chardet
 
-from GSAR_functions import functions, document_creator
-import json
-import io
-from docx import Document
-
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
 else:
@@ -19,7 +14,7 @@ else:
     
 load_dotenv()
 
-bot_id = 2
+bot_id = 4
 
 bot = db_manager.get_bot_by_id(bot_id)
 
@@ -38,17 +33,6 @@ encoding = result['encoding']
 with open(file_path, 'r', encoding = encoding) as file:
     file_content = file.read()
 
-def process_function_call(response):
-    available_functions = {
-        "create_document_with_settings" : functions.create_document_with_settings
-    }
-    function_name = response["function_call"]["name"]
-    function_to_call = available_functions[function_name]
-    function_args = json.loads(response["function_call"]["arguments"])
-    function_response = function_to_call(
-        document_settings=function_args
-    )
-
 st.image("cumminslogo.png")
 st.header(f"{bot_name}")
 
@@ -65,24 +49,9 @@ if st.button("Search") and prompt != "":
             messages=[
                 {"role": "user", "content": complete_prompt}
             ],
-            functions = functions.functions_call,
             temperature=0.0
         )
 
-        response_message = generated_response['choices'][0]['message']
-        if response_message.get("function_call"):
-            process_function_call(response = generated_response['choices'][0]['message'])
-            doc_download = document_creator.return_document()
-            print(type(doc_download))
-            bio = io.BytesIO()
-            doc_download.save(bio)
-            if doc_download:
-                st.download_button(
-                    label="Click here to download",
-                    data=bio.getvalue(),
-                    file_name="template.docx",
-                    mime="docx"
-                )
         formatted_response = generated_response['choices'][0]['message']['content']
 
 

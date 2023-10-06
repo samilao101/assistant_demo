@@ -62,7 +62,7 @@ def sidebar():
 
 sidebar()
 st.image("cumminslogo.png")  # Moved to sidebar
-st.header("Process Bots:")
+st.header("FAQ Harbor:")
 
 all_bots = db_manager.get_all_bots_query()
 
