@@ -15,7 +15,7 @@ else:
     
 load_dotenv()
 
-bot_id = 2
+bot_id = 4
 
 bot = db_manager.get_bot_by_id(bot_id)
 
@@ -56,5 +56,3 @@ if formatted_response != "":
     st.write(formatted_response)
 else:
     st.markdown(f"Definition: {bot_purpose}")
-
-st.write("**Benefits Summary**: [link](https://cummins365.sharepoint.com/sites/GRP_CC42904/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FGRP%5FCC42904%2FShared%20Documents%2FBenefits%2F2022%20Employee%20Benefit%20Summary%2Epdf&parent=%2Fsites%2FGRP%5FCC42904%2FShared%20Documents%2FBenefits)")

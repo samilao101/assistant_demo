@@ -62,18 +62,23 @@ class UniversalModelInterface:
         else:
             raise ValueError(f"Unsupported model: {model_name}")
 
+
     def _local_server_request(self, prompt_question):
-        url = "http://192.168.1.66:11434/api/generate"
+        url = "https://jjptfo2swt2i4p-8080.proxy.runpod.net/generate"
         headers = {
             "Content-Type": "application/json"
         }
         data = {
-            "model": "llama2",
-            "prompt": prompt_question
+            "inputs": prompt_question,
+            "parameters": {
+                "max_new_tokens": 20
+            }
         }
 
         response = requests.post(url, headers=headers, json=data)
-        return response.text
+        response.raise_for_status()  # This will raise an exception for HTTP error responses
+        print(response.json())
+        return response.json()['generated_text'].strip()
 
     def _openai_request_content(self, prompt_question):
         response = openai.ChatCompletion.create(

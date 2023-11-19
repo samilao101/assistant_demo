@@ -64,10 +64,10 @@ def sidebar():
 sidebar()
 st.image("cumminslogo.png")  # Moved to sidebar
 st.header("FAQ Harbor:")
-
+st.markdown('_A safe place to dock with your questions and sail away with great answers..._')
 all_bots = db_manager.get_all_bots_query()
 
-query = st.text_input('Search process by title or key words....')
+query = st.text_input('Search process you would like to know more about by title or key words....')
 
 filtered_bots = [bot for bot in all_bots if query.lower() in bot['name'].lower() or query.lower() in bot['purpose'].lower()]
 

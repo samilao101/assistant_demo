@@ -15,7 +15,7 @@ else:
     
 load_dotenv()
 
-bot_id = 3
+bot_id = 5
 
 bot = db_manager.get_bot_by_id(bot_id)
 
