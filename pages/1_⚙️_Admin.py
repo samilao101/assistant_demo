@@ -5,6 +5,7 @@ import shutil
 import random
 import string
 import openai
+from openai import OpenAI
 from io import StringIO
 from dotenv import load_dotenv
 import io
@@ -14,6 +15,7 @@ import time
 import pickle
 from pathlib import Path
 import streamlit_authenticator as stauth
+import PyPDF2
 
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
@@ -73,8 +75,10 @@ if authentication_status == True:
     db_manager.create_table()
 
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OpenAI(api_key = OPENAI_API_KEY)
+    client = OpenAI()
     openai.api_key = OPENAI_API_KEY
-
+    
     authenticator.logout(f"Logout {user_name}", "main")
     st.header("Create a Bot")
 
@@ -86,28 +90,45 @@ if authentication_status == True:
 
         col1, col2 = st.columns(2)
 
-        data = st.file_uploader("Instructions File", type=['txt'])
+        uploaded_file = st.file_uploader("Instructions File", type=['pdf'])
 
         if 'formatted_response' not in st.session_state:
             st.session_state.formatted_response = ""
 
         if st.button("Generate Purpose from File"):
-            if data is not None:
-                string_data = StringIO(data.getvalue().decode("utf-8"))
-                gsar_prompt = f"summarize the following text into 2 to 3 concise sentences describing it in the way you would see it as introductory paragraph:  {string_data.read()} /n/n "
+            if uploaded_file is not None:
+                #string_data = StringIO(data.getvalue().decode("utf-8"))
+
+                bytes_data = uploaded_file.getvalue()
+
+                pdf_file = io.BytesIO(bytes_data)
+
+                pdf_reader = PyPDF2.PdfReader(pdf_file)
+
+                all_text = ""
+
+                for page in pdf_reader.pages:
+
+                    text = page.extract_text()
+
+                    if text:
+
+                        all_text += text + "\n"
+                
+                gsar_prompt = f"summarize the following text into 2 to 3 concise sentences describing it in the way you would see it as introductory paragraph:  {all_text} /n/n "
                 
                 with st.spinner("Generating response..."):
-                    generated_response = openai.ChatCompletion.create(
-                        model='gpt-4',
-                        messages=[
-                            {"role": "user", "content": gsar_prompt}
-                        ],
-                        temperature=0.0
+                    response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": f"{gsar_prompt}"}
+                    ]
                     )
 
-                    formatted_response = generated_response['choices'][0]['message']['content']
+                    formatted_response = response['choices'][0]['message']['content']
                     st.session_state.formatted_response = formatted_response
-
+                
 
 
         purpose = st.text_area("Purpose of Bot", st.session_state.formatted_response)
@@ -115,7 +136,7 @@ if authentication_status == True:
 
 
 
-        if data is not None and purpose != "" and name != "":
+        if uploaded_file is not None and purpose != "" and name != "":
             if st.button("Create"):
                 file_name = f"{name}.py"
                 folder_name = "pages"
