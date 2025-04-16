@@ -1,5 +1,6 @@
 import requests
 import openai
+from openai import OpenAI
 import openpyxl
 from openpyxl import Workbook
 from datetime import datetime
@@ -8,7 +9,7 @@ from GSAR_functions import functions
 class UniversalModelInterface:
 
     def __init__(self):
-        pass
+        self.client = OpenAI(api_key=openai.api_key)
 
     def initialize_excel(self, file_path):
         try:
@@ -24,21 +25,27 @@ class UniversalModelInterface:
         ws = wb.active
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         question_found = False
+        row_index = None
 
-        for row_index, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):  # Skip header row
+        for r_index, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):  # Skip header row
             if row[0] == question:
                 question_found = True
+                row_index = r_index
                 break
         
         if question_found:
             ws.cell(row=row_index, column=3, value=current_date)  # Update date
-            ws.cell(row=row_index, column=4, value=row[3] + 1)  # Update count
+            count = ws.cell(row=row_index, column=4).value or 0
+            ws.cell(row=row_index, column=4, value=count + 1)  # Update count
         else:
             ws.append([question, response, current_date, 1])  # New question
 
         wb.save(file_path)
 
     def get_response(self, model_name, prompt_question, file_path, prompt):
+        # Make sure the file exists
+        import os
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
         
         wb = self.initialize_excel(file_path)
 
@@ -52,11 +59,11 @@ class UniversalModelInterface:
             return res
         elif model_name == "gpt-4-response":
             res = self._openai_request_response(prompt_question)
-            response_message = res['choices'][0]['message']
-            if response_message.get("function_call"):
+            response_message = res.choices[0].message
+            if hasattr(response_message, "function_call") and response_message.function_call:
                 self.update_excel(wb, file_path, prompt, "Document Created")
             else:
-                formatted_response = res['choices'][0]['message']['content']
+                formatted_response = response_message.content
                 self.update_excel(wb, file_path, prompt, formatted_response)
             return res
         else:
@@ -81,17 +88,17 @@ class UniversalModelInterface:
         return response.json()['generated_text'].strip()
 
     def _openai_request_content(self, prompt_question):
-        response = openai.ChatCompletion.create(
+        response = self.client.chat.completions.create(
             model='gpt-4',
             messages=[
                 {"role": "user", "content": prompt_question}
             ],
             temperature=0.0
         )
-        return response.choices[0].message['content']
+        return response.choices[0].message.content
     
     def _openai_request_response(self, prompt_question):
-        response = openai.ChatCompletion.create(
+        response = self.client.chat.completions.create(
             model='gpt-4',
             messages=[
                 {"role": "user", "content": prompt_question}
@@ -100,5 +107,3 @@ class UniversalModelInterface:
             temperature=0.0
         )
         return response
-
-

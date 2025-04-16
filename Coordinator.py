@@ -8,8 +8,8 @@ from forms_templates import prompt_generator
 from streamlit_javascript import st_javascript
 base_url = st_javascript("await fetch('').then(r => window.parent.location.href)", key="secret")
 
-if os.path.exists('certificate\certificate.crt'):
-    os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
+if os.path.exists(os.path.join('certificate', 'certificate.crt')):
+    os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('certificate', 'certificate.crt')
 else:
     print("Certificate file does not exist or is inaccessible.")
 
@@ -43,7 +43,9 @@ def sidebar():
 
         prompt_question = prompt_generator.generate_coordinator_prompt(question)
         
-        generated_response = openai.ChatCompletion.create(
+        # Updated to use the new OpenAI client
+        client = openai.OpenAI()
+        generated_response = client.chat.completions.create(
             model='gpt-4',
             messages=[
                 {"role": "user", "content": prompt_question}
@@ -51,7 +53,7 @@ def sidebar():
             temperature=0.0
         )
         
-        formatted_response = generated_response['choices'][0]['message']['content']
+        formatted_response = generated_response.choices[0].message.content
         loading_message.text("")  # Clear the loading message or replace it with the completed message.
 
             
