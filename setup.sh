@@ -3,17 +3,13 @@
 # Print Python version
 python --version
 
-# Force installation of openai via pip
-pip install openai==1.74.0
+# Make sure pip is up to date
+pip install --upgrade pip
 
-# Force installation via pipenv
-pip install pipenv
-pipenv install --deploy --skip-lock
+# Direct install of openai with pip
+pip install openai
 
-# Force another direct pip install of key packages
-pip install streamlit==1.25.0 openai==1.74.0 python-dotenv==1.0.0
-
-# Install Python dependencies from requirements.txt as backup
+# Install Python dependencies from requirements.txt
 pip install -r requirements.txt
 
 # Check if OpenAI is installed

@@ -1,12 +1,44 @@
 import streamlit as st
 import os
-import openai
-from dotenv import load_dotenv
+import sys
+
+# Try to import openai or provide clear error
+try:
+    import openai
+except ImportError:
+    st.error("OpenAI package is not installed! Attempting to install now...")
+    import subprocess
+    subprocess.run([sys.executable, "-m", "pip", "install", "openai"])
+    try:
+        import openai
+        st.success("Successfully installed and imported OpenAI!")
+    except ImportError:
+        st.error("Failed to install OpenAI. The app will not function correctly.")
+        st.stop()
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    st.warning("python-dotenv not installed, attempting to install...")
+    import subprocess
+    subprocess.run([sys.executable, "-m", "pip", "install", "python-dotenv"])
+    from dotenv import load_dotenv
+
 import io
 from database import database_manager as db_manager
 from forms_templates import prompt_generator
-from streamlit_javascript import st_javascript
-base_url = st_javascript("await fetch('').then(r => window.parent.location.href)", key="secret")
+try:
+    from streamlit_javascript import st_javascript
+    base_url = st_javascript("await fetch('').then(r => window.parent.location.href)", key="secret")
+except ImportError:
+    st.warning("streamlit-javascript not installed, attempting to install...")
+    import subprocess
+    subprocess.run([sys.executable, "-m", "pip", "install", "streamlit-javascript"])
+    try:
+        from streamlit_javascript import st_javascript
+        base_url = st_javascript("await fetch('').then(r => window.parent.location.href)", key="secret")
+    except:
+        base_url = "/"
 
 if os.path.exists(os.path.join('certificate', 'certificate.crt')):
     os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('certificate', 'certificate.crt')
