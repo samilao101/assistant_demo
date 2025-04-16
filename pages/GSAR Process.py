@@ -28,7 +28,14 @@ try:
     if bot:
         bot_id, bot_name, bot_purpose, bot_file_name = bot
         
+        # Try to get API key from environment first, then from Streamlit secrets
         OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        try:
+            if not OPENAI_API_KEY and 'openai' in st.secrets:
+                OPENAI_API_KEY = st.secrets["openai"]["api_key"]
+        except:
+            pass
+            
         client = OpenAI(api_key=OPENAI_API_KEY)
         openai.api_key = OPENAI_API_KEY
         

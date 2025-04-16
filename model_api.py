@@ -1,4 +1,5 @@
 import requests
+import streamlit as st
 import openai
 from openai import OpenAI
 import openpyxl
@@ -9,7 +10,14 @@ from GSAR_functions import functions
 class UniversalModelInterface:
 
     def __init__(self):
-        self.client = OpenAI(api_key=openai.api_key)
+        # Try to get API key from secrets if not set in openai module
+        api_key = openai.api_key
+        try:
+            if not api_key and 'openai' in st.secrets:
+                api_key = st.secrets["openai"]["api_key"]
+        except:
+            pass
+        self.client = OpenAI(api_key=api_key)
 
     def initialize_excel(self, file_path):
         try:

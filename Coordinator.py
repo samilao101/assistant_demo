@@ -15,7 +15,14 @@ else:
 
 load_dotenv()
 
+# Try to get API key from environment first, then from Streamlit secrets
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+try:
+    if not OPENAI_API_KEY and 'openai' in st.secrets:
+        OPENAI_API_KEY = st.secrets["openai"]["api_key"]
+except:
+    pass
+
 openai.api_key = OPENAI_API_KEY
 
 def convert_spaces_to_underscores(input_string):
