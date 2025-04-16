@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Force installation of openai
+pip install openai==1.74.0
+
 # Install Python dependencies
 pip install -r requirements.txt
 
