@@ -14,7 +14,6 @@ from database import database_manager as db_manager
 import time
 import pickle
 from pathlib import Path
-import PyPDF2
 
 if os.path.exists(os.path.join('certificate', 'certificate.crt')):
     os.environ['REQUESTS_CA_BUNDLE'] = os.path.join('certificate', 'certificate.crt')
@@ -47,7 +46,7 @@ if st.session_state.show_fields == True:
 
     col1, col2 = st.columns(2)
 
-    uploaded_file = st.file_uploader("Instructions File", type=['pdf'])
+    uploaded_file = st.file_uploader("Instructions File", type=['txt'])
 
     if 'formatted_response' not in st.session_state:
         st.session_state.formatted_response = ""
@@ -56,16 +55,7 @@ if st.session_state.show_fields == True:
         if uploaded_file is not None:
             bytes_data = uploaded_file.getvalue()
 
-            pdf_file = io.BytesIO(bytes_data)
-
-            pdf_reader = PyPDF2.PdfReader(pdf_file)
-
-            all_text = ""
-
-            for page in pdf_reader.pages:
-                text = page.extract_text()
-                if text:
-                    all_text += text + "\n"
+            all_text = bytes_data.decode('utf-8')
             
             gsar_prompt = f"summarize the following text into 2 to 3 concise sentences describing it in the way you would see it as introductory paragraph:  {all_text} /n/n "
             

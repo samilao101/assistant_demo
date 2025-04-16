@@ -112,6 +112,7 @@ class UniversalModelInterface:
                 {"role": "user", "content": prompt_question}
             ],
             functions = functions.functions_call,
+            function_call = "auto",  # Allow the model to decide when to call functions
             temperature=0.0
         )
         return response
