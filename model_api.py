@@ -97,7 +97,7 @@ class UniversalModelInterface:
 
     def _openai_request_content(self, prompt_question):
         response = self.client.chat.completions.create(
-            model='gpt-4',
+            model='gpt-4o',
             messages=[
                 {"role": "user", "content": prompt_question}
             ],
@@ -107,7 +107,7 @@ class UniversalModelInterface:
     
     def _openai_request_response(self, prompt_question):
         response = self.client.chat.completions.create(
-            model='gpt-4',
+            model='gpt-4o',
             messages=[
                 {"role": "user", "content": prompt_question}
             ],
