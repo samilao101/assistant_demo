@@ -1,9 +1,19 @@
 #!/bin/bash
 
-# Force installation of openai
+# Print Python version
+python --version
+
+# Force installation of openai via pip
 pip install openai==1.74.0
 
-# Install Python dependencies
+# Force installation via pipenv
+pip install pipenv
+pipenv install --deploy --skip-lock
+
+# Force another direct pip install of key packages
+pip install streamlit==1.25.0 openai==1.74.0 python-dotenv==1.0.0
+
+# Install Python dependencies from requirements.txt as backup
 pip install -r requirements.txt
 
 # Check if OpenAI is installed
