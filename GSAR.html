@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Supplier Add & Change Request (GSAR) Process</title>
+  <style>
+    :root {
+      --primary:#134074;
+      --secondary:#8DA9C4;
+      --bg:#F5F7FA;
+      --text:#222;
+    }
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);} 
+    header{background:var(--primary);color:#fff;padding:1.5rem 2rem;}
+    header h1{margin:0;font-size:2rem;}
+    header p{margin:.25rem 0 0;font-size:1rem;opacity:.85;}
+    nav{background:var(--secondary);padding:.5rem 1rem;display:flex;flex-wrap:wrap;gap:1rem;}
+    nav a{color:#fff;text-decoration:none;font-weight:bold;}
+    nav a:hover{text-decoration:underline;}
+    main{padding:2rem;max-width:1000px;margin:auto;}
+    section{margin-bottom:2.5rem;}
+    h2{color:var(--primary);margin-top:0;}
+    ul{margin-left:1.2rem;}
+    details{background:#fff;border:1px solid #ddd;border-radius:8px;margin:1rem 0;padding:1rem;}
+    summary{font-weight:bold;cursor:pointer;}
+    pre{background:#f0f0f0;padding:1rem;border-radius:4px;overflow:auto;}
+    .note{background:#fff3cd;border-left:6px solid #ffeeba;padding:1rem;margin:1rem 0;}
+    footer{background:var(--primary);color:#fff;padding:1rem;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>GSAR Process Guide</h1>
+    <p>Global Supplier Add &amp; Change Requests at Cummins, Inc.</p>
+  </header>
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#getting-started">Getting Started</a>
+    <a href="#request-types">Request Types</a>
+    <a href="#new-supplier">New Supplier GSAR</a>
+    <a href="#existing-supplier">Changes to Existing</a>
+    <a href="#documentation">Documentation</a>
+    <a href="#notes">Important Notes</a>
+  </nav>
+  <main>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>The Global Supplier Add Change Request (GSAR) is the formal process for adding a new supplier or updating an existing supplier within Cummins’ master supplier system <strong>Supplier 360 (S360)</strong>. It ensures data accuracy and compliance by requiring appropriate verification and documentation directly from the supplier.</p>
+    </section>
+
+    <section id="getting-started">
+      <h2>Getting Started</h2>
+      <ol>
+        <li>The requester identifies a <strong>GSAR Super User</strong> for their location using the internal contact list.</li>
+        <li>The requester contacts the Super User and specifies whether they need to <em>add</em> or <em>update</em> a supplier.</li>
+        <li>The Super User validates the necessity of the request in S360 before proceeding.</li>
+      </ol>
+    </section>
+
+    <section id="request-types">
+      <h2>Types of GSAR Requests</h2>
+      <ul>
+        <li><strong>New Supplier GSAR</strong> – onboarding a brand‑new supplier.</li>
+        <li><strong>Changes to Existing Supplier GSAR</strong> – modifying records of an already‑approved supplier (internal or external).</li>
+      </ul>
+    </section>
+
+    <section id="new-supplier">
+      <h2>New Supplier GSAR</h2>
+      <p>Before a Super User can open a new‑supplier request, the requester must supply:</p>
+      <ul>
+        <li>Supplier’s <strong>country</strong></li>
+        <li>Whether the supplier is <strong>Indirect</strong> (non‑production) or <strong>Direct</strong> (production)</li>
+        <li><strong>Commodity / Category</strong></li>
+        <li>Requested <strong>Payment Terms</strong> (with justification if different from Cummins standard N90)</li>
+      </ul>
+
+      <details>
+        <summary>Required Documents</summary>
+        <ul>
+          <li><strong>Letterhead</strong> (mandatory) – see content requirements below.</li>
+          <li><strong>Tax Document</strong> – required only for certain locations:
+            <ul>
+              <li><em>United States:</em> Signed W‑9 (dated &lt; 1 year)</li>
+              <li><em>India:</em> PAN Card</li>
+              <li><em>Other regions:</em> VAT / GSTIN / Tax ID as applicable</li>
+            </ul>
+          </li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>Letterhead Content Checklist</summary>
+        <h3>Indirect Suppliers</h3>
+        <ul>
+          <li>Legal supplier name</li>
+          <li>Taxpayer ID / VAT #/ PAN / GSTIN / CNPJ (as applicable)</li>
+          <li>Purchase‑order mailing address &amp; PO contact</li>
+          <li>Payment mailing address &amp; A/R contact</li>
+          <li>Currency &amp; complete banking details</li>
+          <li>Remittance notification email</li>
+        </ul>
+        <h3>Direct Suppliers</h3>
+        <ul>
+          <li>All of the above, substituting <strong>Ship‑From Address</strong> for Purchase‑Order Address</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="existing-supplier">
+      <h2>Changes to Existing Supplier GSAR</h2>
+      <p>A change request can be <em>internal</em> (no supplier documentation) or <em>external</em> (documentation required).</p>
+
+      <details>
+        <summary>Internal Changes (No Docs)</summary>
+        <ul>
+          <li>Payment terms (include business justification)</li>
+          <li>Global Entity add (make a direct supplier available to all plants)</li>
+          <li>Site or Supplier inactivation</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>External Changes (Docs Required)</summary>
+        <ul>
+          <li><strong>Name Change</strong> – old vs. new name on letterhead; must match tax docs</li>
+          <li><strong>Address Change</strong> – specify old &amp; new address, address purpose, any new contacts</li>
+          <li><strong>Address Addition</strong> – new purchasing/ship‑from address + linked payment address</li>
+          <li><strong>Contact Change</strong> – old vs. new PO or A/R contact data</li>
+          <li><strong>Contact Addition</strong> – new contact + address association</li>
+          <li><strong>Banking Change</strong> – full new banking details (see template)</li>
+          <li><strong>Currency Change</strong> – old vs. new currency noted</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="documentation">
+      <h2>Banking Details Template</h2>
+      <pre>
+Bank Name:
+Beneficiary Name:
+Routing Number (ABA):
+Bank Account Number:
+IBAN / Swift / Transit / Sort Code:
+Bank City / State / Country:
+Currency:
+      </pre>
+    </section>
+
+    <section id="notes">
+      <h2>Important Notes</h2>
+      <div class="note">
+        <ul>
+          <li>All documents must be signed (physical or e‑signature), dated within 12 months, and include the name &amp; title of the supplier representative.</li>
+          <li>Quotes, invoices, blank letterhead, or email screenshots are <em>not</em> acceptable substitutes.</li>
+          <li>A change to Tax ID requires creation of a <strong>New Supplier</strong> GSAR instead of an update.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer>&copy; Cummins Inc. | GSAR Process Guide</footer>
+</body>
+</html>

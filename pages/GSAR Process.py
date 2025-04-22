@@ -11,6 +11,8 @@ import json
 import io
 from docx import Document
 import model_api
+from pathlib import Path
+
 
 if os.path.exists('certificate\certificate.crt'):
     os.environ['REQUESTS_CA_BUNDLE'] = 'certificate\certificate.crt'
@@ -52,6 +54,9 @@ def process_function_call(response):
 st.image("cumminslogo.png")
 st.header(f"{bot_name}")
 
+st.audio("gsar.audio.wav", format="audio/wav", loop=True)
+
+
 prompt = st.text_input(
     f"Please type your {bot_name} questions below. Questions/Responses may be monitored.", placeholder="Enter question...")
 
@@ -83,7 +88,19 @@ if st.button("Search") and prompt != "":
         formatted_response = response_message.content
 
 
+
 if formatted_response != "":
     st.write(formatted_response)
 else:
     st.markdown(f"Definition: {bot_purpose}")
+
+st.link_button("Additional Information/Templates/Training", "https://cummins365.sharepoint.com/sites/CS405/SitePages/S360.aspx")
+
+# html = Path("GSAR.html").read_text(encoding="utf‑8")
+
+# # 2 ‑ embed it in an iframe‑like component
+# st.components.v1.html(
+#     html,
+#     height=900,          # make taller or set width=…
+#     scrolling=True       # allow the user to scroll within the frame
+# )
