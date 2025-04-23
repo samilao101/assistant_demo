@@ -61,33 +61,57 @@ prompt = st.text_input(
     f"Please type your {bot_name} questions below. Questions/Responses may be monitored.", placeholder="Enter question...")
 
 formatted_response = ""
+generate_doc = st.toggle("Generate Template/S360 eForm Steps", value=False)
 
 if st.button("Search") and prompt != "":
-    complete_prompt = f"Use the following context below to answer question: {prompt}\n\n(Please use markdown to make the response easier to read). Do not make up answers and only respond to questions relevant to the context.\n\nIf the user is requesting to create or update a GSAR document, please use the create_document_with_settings function with the appropriate settings. For example, if they want to update an address, set address_update to 'yes'.\n\nContext: {file_content}"
+
+    if generate_doc:
+        complete_prompt = f"Use the following context below to answer question: {prompt}\n\n(Please use markdown to make the response easier to read). Do not make up answers and only respond to questions relevant to the context.\n\nIf the user is requesting to create or update a GSAR document, please use the create_document_with_settings function with the appropriate settings. For example, if they want to update an address, set address_update to 'yes'.\n\nContext: {file_content}. \n\n If they dont ask for a form or document, just provide the response making a function call to create_document_with_settings."
+        response_type = "gpt-4-response"
+    else:
+        complete_prompt = f"Use the following context below to answer question: {prompt}\n\n(Please use markdown to make the response easier to read). Do not make up answers and only respond to questions relevant to the context.\n\n Context: {file_content}"
+        response_type = "gpt-4"
     with st.spinner("Generating response..."):
-    
-        interface = model_api.UniversalModelInterface()
+        if generate_doc:       
+            interface = model_api.UniversalModelInterface()
+            generated_response = interface.get_response(response_type, complete_prompt, f'responses/{bot_name}.xlsx', prompt)
+            response_message = generated_response.choices[0].message 
+            if hasattr(response_message, "function_call") and response_message.function_call:
+                # Process the function call (e.g., build the docx)
+                process_function_call(response=response_message)
 
-        generated_response = interface.get_response("gpt-4-response", complete_prompt, f'responses/{bot_name}.xlsx', prompt)
-        print(complete_prompt)
-        response_message = generated_response.choices[0].message
-        
-        if hasattr(response_message, "function_call") and response_message.function_call:
-            process_function_call(response=response_message)
-            doc_download = document_creator.return_document()
-            print(type(doc_download))
-            bio = io.BytesIO()
-            doc_download.save(bio)
-            if doc_download:
-                st.download_button(
-                    label="Click here to download",
-                    data=bio.getvalue(),
-                    file_name="template.docx",
-                    mime="docx"
-                )
-        formatted_response = response_message.content
+                # Retrieve first document
+                doc_download = document_creator.return_document()
+                bio = io.BytesIO()
+                doc_download.save(bio)
+                bio.seek(0)  # Ensure the buffer is at the beginning
 
+                if doc_download:
+                    st.download_button(
+                        label="Download Template Document",
+                        data=bio.getvalue(),
+                        file_name="template.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    )
 
+                # Retrieve second document (eForm)
+                doc_download2 = document_creator.return_eform_document()
+                bio2 = io.BytesIO()
+                doc_download2.save(bio2)
+                bio2.seek(0)
+
+                if doc_download2:
+                    st.download_button(
+                        label="Download S360 E-Form Steps",
+                        data=bio2.getvalue(),
+                        file_name="eform_docs.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    )
+
+                formatted_response = response_message.content
+        else:
+            interface = model_api.UniversalModelInterface()
+            formatted_response = interface.get_response("gpt-4", complete_prompt, f'responses/{bot_name}.xlsx', prompt)            
 
 if formatted_response != "":
     st.write(formatted_response)

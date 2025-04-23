@@ -40,3 +40,6 @@ functions_call = [
 def create_document_with_settings(document_settings):
     print(document_settings)
     document_creator.create_documents(document_settings)
+    document_creator.create_eform_documents(document_settings)
+
+    
